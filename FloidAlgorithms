@@ -1,0 +1,45 @@
+import java.util.Arrays;
+
+public class FloidAlgo {
+  public static void main(String[] args) {
+      double[][] matr = new double[][]{{0, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY},
+              {Double.POSITIVE_INFINITY, 0, 4, -4, Double.POSITIVE_INFINITY},
+              {-8,-5,0,Double.POSITIVE_INFINITY,6},
+              {6,-4,8,0,2},
+              {3,7,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,0}};
+      FloydAlgorithm(matr);
+  }
+
+  public static double[][] FloydAlgorithm(double[][] matrix) {
+      int length = matrix.length;
+      double[][] nextIteration = new double[length][];
+      for (int i = 0; i < matrix.length; i++) {
+          nextIteration[i] = Arrays.copyOf(matrix[i], length);
+      }
+      int[][] bestPath = new int[length][length];
+      for (int y = 0; y < length; y++) {
+          for (int x = 0; x < length; x++) {
+              bestPath[y][x] = y + 1;
+          }
+      }
+      for (int base = 0; base < length; base++) {
+          System.out.println("W" + base + ": " + Arrays.deepToString(nextIteration));
+          System.out.println("P" + base + ": " + Arrays.deepToString(bestPath) + "\n");
+          for (int y = 0; y < length; y++) {
+              for (int x = 0; x < length; x++) {
+                  double prevValue = matrix[y][base] + matrix[base][x];
+                  if (nextIteration[y][x] > prevValue) {
+                      nextIteration[y][x] = prevValue;
+                      bestPath[y][x] = base + 1;
+                  }
+              }
+          }
+          for (int i = 0; i < length; i++) {
+              matrix[i] = Arrays.copyOf(nextIteration[i], length);
+          };
+      }
+      System.out.println("W last: " + Arrays.deepToString(nextIteration));
+      System.out.println("P last: " + Arrays.deepToString(bestPath) + "\n");
+      return nextIteration;
+  }
+}
